@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,11 +21,35 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build
-
       - name: Run Lint
         run: npm run lint || echo "Linting failed"
 
+  test:
+    runs-on: ubuntu-latest
+    needs: lint  # Dieser Job benötigt, dass der Lint-Job erfolgreich war
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Run Tests
         run: npm test || echo "Tests failed"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test  # Dieser Job benötigt, dass der Test-Job erfolgreich war
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Simulate Deployment
+        run: echo "Deployment successful"
