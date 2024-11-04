@@ -4,35 +4,37 @@ import Header from './Header';
 import * as test from "node:test";
 import expect from "expect";
 import '@testing-library/jest-dom/extend-expect';
+import {jest} from "globals";
 
-describe('Header', () => {
-    test('renders the header with navigation links', () => {
+// Mocken von Next.js Link-Komponenten
+jest.mock('next/link', () => {
+    return ({ children }) => {
+        return children;
+    };
+});
+
+describe('Header Component', () => {
+    test('renders Header with navigation links', () => {
         render(<Header />);
 
-        // Überprüfen, ob der Titel der Anwendung gerendert wird
-        const titleElement = screen.getByText(/Einkaufsliste App/i);
-        expect(titleElement).toBeInTheDocument();
-
-        // Überprüfen, ob die Links vorhanden sind
-        const createListLink = screen.getByText(/Neue Liste erstellen/i);
-        const joinListLink = screen.getByText(/Liste beitreten/i);
-        const viewListLink = screen.getByText(/Einkaufsliste anzeigen/i);
-
-        expect(createListLink).toBeInTheDocument();
-        expect(joinListLink).toBeInTheDocument();
-        expect(viewListLink).toBeInTheDocument();
+        // Überprüfen, ob die Links in der Header-Komponente gerendert werden
+            expect(screen.getByText(/Einkaufsliste App/i)).toBeInTheDocument();
+        expect(screen.getByText(/Neue Liste erstellen/i)).toBeInTheDocument();
+        expect(screen.getByText(/Liste beitreten/i)).toBeInTheDocument();
+        expect(screen.getByText(/Einkaufsliste anzeigen/i)).toBeInTheDocument();
     });
 
-    test('links point to the correct pages', () => {
+    test('checks the links have correct hrefs', () => {
         render(<Header />);
 
-        // Überprüfen der href-Attribute der Links
-        const createListLink = screen.getByText(/Neue Liste erstellen/i);
-        const joinListLink = screen.getByText(/Liste beitreten/i);
-        const viewListLink = screen.getByText(/Einkaufsliste anzeigen/i);
+        const homeLink = screen.getByText(/Einkaufsliste App/i).closest('a');
+        const registerLink = screen.getByText(/Neue Liste erstellen/i).closest('a');
+        const joinLink = screen.getByText(/Liste beitreten/i).closest('a');
+        const listLink = screen.getByText(/Einkaufsliste anzeigen/i).closest('a');
 
-        expect(createListLink.closest('a')).toHaveAttribute('href', '/register');
-        expect(joinListLink.closest('a')).toHaveAttribute('href', '/join');
-        expect(viewListLink.closest('a')).toHaveAttribute('href', '/list');
+        expect(homeLink).toHaveAttribute('href', '/');
+        expect(registerLink).toHaveAttribute('href', '/register');
+        expect(joinLink).toHaveAttribute('href', '/join');
+        expect(listLink).toHaveAttribute('href', '/list');
     });
 });
