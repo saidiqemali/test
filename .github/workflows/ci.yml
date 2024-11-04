@@ -6,36 +6,26 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # Check out the repository
       - name: Check out code
         uses: actions/checkout@v2
 
-      # Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '14'
 
-      # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Run Linting
-      - name: Run ESLint
-        run: npm run lint || echo "Linting failed!"
-
-      # Run tests
-      - name: Run Jest tests
-        run: npm test || echo "Tests failed!"
-
-      # Build the application
-      - name: Build application
+      - name: Build
         run: npm run build
 
-      # Deploy
-      - name: Deploy to server (hypothetical)
-        run: echo "Deployment step goes here"
+      - name: Run Lint
+        run: npm run lint || echo "Linting failed"
+
+      - name: Run Tests
+        run: npm test || echo "Tests failed"
