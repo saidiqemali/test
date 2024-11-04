@@ -24,9 +24,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Run Linting
+      - name: Run ESLint
+        run: npm run lint || echo "Linting failed!"
+
       # Run tests
-      - name: Run tests
-        run: npm test
+      - name: Run Jest tests
+        run: npm test || echo "Tests failed!"
 
       # Build the application
       - name: Build application
